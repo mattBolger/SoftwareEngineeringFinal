@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndieVault — Free Indie Game Platform</title>
+    <style>
+                /* ===== BASE SETUP ===== */
+                /* Project: IndieVault
+           Team: JGBProductions
+           Description: A free, safe, accessible platform for indie game publishing and discovery.
+           Tech Stack: HTML / CSS / JS (frontend only for now)
+        */
+
+                * {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    background: #111;
+                    color: #e0e0e0;
+                    min-height: 100vh;
+                    line-height: 1.6;
+                }
+
+                a {
+                    color: #7c6cf7;
+                    text-decoration: none;
+                }
+
+                    a:hover {
+                        text-decoration: underline;
+                    }
+
+                /* ===== NAVIGATION (placeholder) ===== */
+                .nav {
+                    background: #1a1a1a;
+                    border-bottom: 1px solid #333;
+                    padding: 16px 32px;
+                    display: flex;
+                    align-items: center;
+                    gap: 32px;
+                }
+
+                .nav-logo {
+                    font-size: 1.3rem;
+                    font-weight: bold;
+                    color: #fff;
+                }
+
+                .nav-links {
+                    display: flex;
+                    gap: 20px;
+                }
+
+                    .nav-links a {
+                        color: #aaa;
+                        font-size: 0.9rem;
+                    }
+
+                        .nav-links a:hover {
+                            color: #fff;
+                            text-decoration: none;
+                        }
+
+                /* ===== MAIN CONTENT ===== */
+                .main {
+                    max-width: 960px;
+                    margin: 0 auto;
+                    padding: 40px 24px;
+                }
+
+                /* Placeholder sections */
+                .placeholder-section {
+                    border: 1px dashed #333;
+                    border-radius: 8px;
+                    padding: 48px 32px;
+                    margin-bottom: 24px;
+                    text-align: center;
+                }
+
+                    .placeholder-section h2 {
+                        font-size: 1.2rem;
+                        color: #888;
+                        margin-bottom: 8px;
+                    }
+
+                    .placeholder-section p {
+                        color: #555;
+                        font-size: 0.9rem;
+                    }
+
+                    .placeholder-section .tag {
+                        display: inline-block;
+                        background: #222;
+                        color: #666;
+                        padding: 3px 10px;
+                        border-radius: 12px;
+                        font-size: 0.75rem;
+                        margin: 4px;
+                    }
+
+                /* Hero area */
+                .hero {
+                    text-align: center;
+                    padding: 60px 20px;
+                }
+
+                    .hero h1 {
+                        font-size: 2.2rem;
+                        color: #fff;
+                        margin-bottom: 12px;
+                    }
+
+                    .hero p {
+                        color: #888;
+                        max-width: 500px;
+                        margin: 0 auto;
+                    }
+
+                /* Footer */
+                .footer {
+                    border-top: 1px solid #222;
+                    padding: 32px;
+                    text-align: center;
+                    color: #555;
+                    font-size: 0.8rem;
+                    margin-top: 60px;
+                }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">IndieVault</div>
+        <div class="nav-links">
+            <a href="#">Browse</a>
+            <a href="#">Publish</a>
+            <a href="#">Profile</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Hero / Landing -->
+        <div class="hero">
+            <h1>IndieVault</h1>
+            <p>A free, safe platform where indie developers publish games and players discover hidden gems.</p>
+        </div>
+
+        <!-- Game Browsing Section -->
+        <div class="placeholder-section">
+            <h2>Game Browsing</h2>
+            <p>Game cards and search/filter functionality will go here.</p>
+            <div style="margin-top: 12px;">
+                <span class="tag">Search</span>
+                <span class="tag">Filter by tag</span>
+                <span class="tag">Game cards</span>
+                <span class="tag">Ratings</span>
+            </div>
+        </div>
+
+        <!-- Game Detail Section -->
+        <div class="placeholder-section">
+            <h2>Game Detail Page</h2>
+            <p>Individual game view with screenshots, description, reviews, and play/download buttons.</p>
+            <div style="margin-top: 12px;">
+                <span class="tag">Screenshots</span>
+                <span class="tag">Reviews</span>
+                <span class="tag">Play in Browser</span>
+                <span class="tag">Download</span>
+            </div>
+        </div>
+
+        <!-- Publishing Section -->
+        <div class="placeholder-section">
+            <h2>Publish / Upload</h2>
+            <p>Developer game upload workflow — drag and drop files, enter game details, go live.</p>
+            <div style="margin-top: 12px;">
+                <span class="tag">Drag & Drop</span>
+                <span class="tag">Game Metadata</span>
+                <span class="tag">Tags</span>
+                <span class="tag">Cover Image</span>
+            </div>
+        </div>
+
+        <!-- User Account Section -->
+        <div class="placeholder-section">
+            <h2>User Accounts</h2>
+            <p>Login / Signup forms, profile pages for developers and players.</p>
+            <div style="margin-top: 12px;">
+                <span class="tag">Login</span>
+                <span class="tag">Signup</span>
+                <span class="tag">Dev Profile</span>
+                <span class="tag">Player Profile</span>
+            </div>
+        </div>
+
+        <!-- TODO List -->
+        <div style="margin-top: 48px; padding: 24px; background: #1a1a1a; border-radius: 8px; border: 1px solid #333;">
+            <h3 style="color: #aaa; font-size: 1rem; margin-bottom: 16px;">Project Roadmap</h3>
+            <ul style="list-style: none; font-size: 0.85rem; color: #777; line-height: 2;">
+                <li>[ ] Set up GitHub repository</li>
+                <li>[ ] Create base HTML structure</li>
+                <li>[ ] Design navigation and page routing</li>
+                <li>[&nbsp;] Build game browsing with cards and filters</li>
+                <li>[&nbsp;] Build publishing workflow UI</li>
+                <li>[&nbsp;] Implement user login (hardcoded)</li>
+                <li>[&nbsp;] Create developer profile page</li>
+                <li>[&nbsp;] Create player profile page</li>
+                <li>[&nbsp;] Build game detail page with reviews</li>
+                <li>[&nbsp;] Add download functionality</li>
+                <li>[&nbsp;] Polish UI, animations, and responsive design</li>
+            </ul>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        IndieVault &copy; 2026 — JGBProductions · MCS3653 HW5
+    </footer>
+
+</body>
+</html>
