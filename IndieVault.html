@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndieVault — Free Indie Game Platform</title>
+    <title>IndieVault ï¿½ Free Indie Game Platform</title>
     <style>
                 /* ===== BASE SETUP ===== */
                 /* Project: IndieVault
@@ -36,14 +36,15 @@
                     }
 
                 /* ===== NAVIGATION (placeholder) ===== */
-                .nav {
-                    background: #1a1a1a;
-                    border-bottom: 1px solid #333;
-                    padding: 16px 32px;
-                    display: flex;
-                    align-items: center;
-                    gap: 32px;
-                }
+        .nav {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            justify-content: space-between; /* added for logged-in text */
+        }
 
                 .nav-logo {
                     font-size: 1.3rem;
@@ -130,19 +131,46 @@
                     font-size: 0.8rem;
                     margin-top: 60px;
                 }
+
+                
+                input, textarea, button {
+                    width: 100%;
+                    padding: 8px;
+                    margin: 6px 0;
+                    background: #222;
+                    border: 1px solid #444;
+                    color: #ddd;
+                    border-radius: 4px;
+                }
+
+                button {
+                    background: #7c6cf7;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                    button:hover {
+                        background: #6a5de0;
+                    }
     </style>
 </head>
 <body>
 
     <!-- Navigation -->
     <nav class="nav">
-        <div class="nav-logo">IndieVault</div>
-        <div class="nav-links">
-            <a href="#">Browse</a>
-            <a href="#">Publish</a>
-            <a href="#">Profile</a>
+        <div style="display:flex;align-items:center;gap:32px;">
+            <div class="nav-logo">IndieVault</div>
+            <div class="nav-links">
+                <a href="#">Browse</a>
+                <a href="#">Publish</a>
+                <a href="#">Profile</a>
+            </div>
         </div>
+
+        <div id="nav-user" style="color:#7c6cf7;font-size:0.9rem;">Not logged in</div>
     </nav>
+
+
 
     <!-- Main Content -->
     <main class="main">
@@ -177,10 +205,29 @@
             </div>
         </div>
 
-        <!-- Publishing Section -->
+
+        <!-- Publishing Section (MINIMAL CHANGES ADDED) -->
         <div class="placeholder-section">
             <h2>Publish / Upload</h2>
-            <p>Developer game upload workflow — drag and drop files, enter game details, go live.</p>
+            <p>Developer game upload workflow â€” drag and drop files, enter game details, go live.</p>
+
+            <!-- ADDED: Fake drag-and-drop + confirmation -->
+            <div style="border:2px dashed #444;padding:20px;margin:15px 0;border-radius:8px;">
+                <p style="color:#777;">Drag & Drop your .zip file here</p>
+                <p style="color:#777;">(Upload functionality coming in Sprint 2)</p>
+            </div>
+
+            <input id="publish-title" type="text" placeholder="Game Title">
+            <textarea id="publish-desc" placeholder="Description"></textarea>
+            <input id="publish-tags" type="text" placeholder="Tags">
+
+            <button id="publish-submit">Submit Game</button>
+
+
+
+
+            <!-- ADDED: Fake submission confirmation -->
+
             <div style="margin-top: 12px;">
                 <span class="tag">Drag & Drop</span>
                 <span class="tag">Game Metadata</span>
@@ -189,16 +236,42 @@
             </div>
         </div>
 
-        <!-- User Account Section -->
+        <!-- User Account Section (MINIMAL CHANGES ADDED) -->
         <div class="placeholder-section">
             <h2>User Accounts</h2>
             <p>Login / Signup forms, profile pages for developers and players.</p>
+            <!-- Example credentials (added) -->
+            <p style="color:#888;margin-bottom:10px;">
+                Example login:<br>
+                <strong>Username:</strong> demoUser<br>
+                <strong>Password:</strong> demoPass
+            </p>
+
+            <form style="max-width:300px;margin:0 auto;text-align:left;">
+                <input id="login-user" type="text" placeholder="Username">
+                <input id="login-pass" type="password" placeholder="Password">
+                <button id="login-btn">Log In</button>
+            </form>
+
+            <p id="login-status" style="margin-top:10px;color:#888;"></p>
+
+            <!-- No hardcoded success/error messages -->
+
             <div style="margin-top: 12px;">
                 <span class="tag">Login</span>
                 <span class="tag">Signup</span>
                 <span class="tag">Dev Profile</span>
                 <span class="tag">Player Profile</span>
             </div>
+        </div>
+
+        <!-- ADDED: Developer Dashboard -->
+        <div class="placeholder-section">
+            <h2>Developer Dashboard</h2>
+            <p>Your Published Games:</p>
+            <ul id="dev-game-list" style="color:#aaa;margin-top:10px;list-style:none;padding:0;"></ul>
+
+
         </div>
 
         <!-- TODO List -->
@@ -222,8 +295,64 @@
     </main>
 
     <footer class="footer">
-        IndieVault &copy; 2026 — JGBProductions · MCS3653 HW5
+        IndieVault &copy; 2026 ï¿½ JGBProductions ï¿½ MCS3653 HW5
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // --- LOGIN LOGIC ---
+            const loginBtn = document.getElementById("login-btn");
+            const loginUser = document.getElementById("login-user");
+            const loginPass = document.getElementById("login-pass");
+            const loginStatus = document.getElementById("login-status");
+            const navUser = document.getElementById("nav-user");
+
+            const VALID_USER = "demoUser";
+            const VALID_PASS = "demoPass";
+
+            loginBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                if (loginUser.value === VALID_USER && loginPass.value === VALID_PASS) {
+                    navUser.textContent = "Logged in as: " + VALID_USER;
+                    loginStatus.style.color = "#4caf50";
+                    loginStatus.textContent = "Login successful.";
+                } else {
+                    loginStatus.style.color = "#f44336";
+                    loginStatus.textContent = "Invalid username or password.";
+                }
+                loginUser.value = "";
+                loginPass.value = "";
+
+            });
+
+            // --- GAME UPLOAD LOGIC ---
+            const publishBtn = document.getElementById("publish-submit");
+            const publishTitle = document.getElementById("publish-title");
+            const publishDesc = document.getElementById("publish-desc");
+            const publishTags = document.getElementById("publish-tags");
+            const devList = document.getElementById("dev-game-list");
+
+            publishBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                // Only add if title is not empty
+                if (publishTitle.value.trim() !== "") {
+                    const li = document.createElement("li");
+                    li.textContent = publishTitle.value.trim();
+                    devList.appendChild(li);
+                }
+
+                // Clear fields
+                publishTitle.value = "";
+                publishDesc.value = "";
+                publishTags.value = "";
+            });
+
+        });
+    </script>
+
 
 </body>
 </html>
