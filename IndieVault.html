@@ -3,356 +3,2436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndieVault � Free Indie Game Platform</title>
+    <title>IndieVault — Free Indie Game Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-                /* ===== BASE SETUP ===== */
-                /* Project: IndieVault
-           Team: JGBProductions
-           Description: A free, safe, accessible platform for indie game publishing and discovery.
-           Tech Stack: HTML / CSS / JS (frontend only for now)
-        */
-
-                * {
-                    box-sizing: border-box;
-                    margin: 0;
-                    padding: 0;
-                }
-
-                body {
-                    font-family: Arial, Helvetica, sans-serif;
-                    background: #111;
-                    color: #e0e0e0;
-                    min-height: 100vh;
-                    line-height: 1.6;
-                }
-
-                a {
-                    color: #7c6cf7;
-                    text-decoration: none;
-                }
-
-                    a:hover {
-                        text-decoration: underline;
-                    }
-
-                /* ===== NAVIGATION (placeholder) ===== */
-        .nav {
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
-            padding: 16px 32px;
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            justify-content: space-between; /* added for logged-in text */
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a26;
+            --bg-card-hover: #22222f;
+            --bg-input: #16161f;
+            --border: #2a2a3a;
+            --border-focus: #6c5ce7;
+            --text-primary: #e8e6f0;
+            --text-secondary: #9896a8;
+            --text-muted: #5c5a6e;
+            --accent-1: #6c5ce7;
+            --accent-1-glow: rgba(108, 92, 231, 0.35);
+            --accent-2: #fd7e61;
+            --accent-2-glow: rgba(253, 126, 97, 0.3);
+            --accent-3: #00cec9;
+            --accent-3-glow: rgba(0, 206, 201, 0.3);
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-glow: 0 0 30px var(--accent-1-glow);
+            --font-display: 'Outfit', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --nav-height: 64px;
         }
 
-                .nav-logo {
-                    font-size: 1.3rem;
-                    font-weight: bold;
-                    color: #fff;
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+        }
+
+        input, textarea, select {
+            font-family: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--accent-1);
+            }
+
+        /* ===== BACKGROUND EFFECTS ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 20% 20%, rgba(108,92,231,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(253,126,97,0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+            .nav-logo .logo-icon {
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            margin-left: 40px;
+        }
+
+            .nav-links a {
+                padding: 8px 16px;
+                border-radius: var(--radius-sm);
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: var(--text-secondary);
+                transition: all 0.2s;
+            }
+
+                .nav-links a:hover, .nav-links a.active {
+                    color: var(--text-primary);
+                    background: rgba(108,92,231,0.12);
                 }
 
-                .nav-links {
-                    display: flex;
-                    gap: 20px;
+                .nav-links a.active {
+                    color: var(--accent-1);
                 }
 
-                    .nav-links a {
-                        color: #aaa;
-                        font-size: 0.9rem;
-                    }
+        .nav-search {
+            margin-left: auto;
+            position: relative;
+        }
 
-                        .nav-links a:hover {
-                            color: #fff;
-                            text-decoration: none;
-                        }
+            .nav-search input {
+                background: var(--bg-input);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-xl);
+                padding: 8px 16px 8px 38px;
+                color: var(--text-primary);
+                font-size: 0.85rem;
+                width: 220px;
+                transition: all 0.3s;
+                outline: none;
+            }
 
-                /* ===== MAIN CONTENT ===== */
-                .main {
-                    max-width: 960px;
-                    margin: 0 auto;
-                    padding: 40px 24px;
+                .nav-search input:focus {
+                    border-color: var(--accent-1);
+                    width: 300px;
+                    box-shadow: 0 0 0 3px var(--accent-1-glow);
                 }
 
-                /* Placeholder sections */
-                .placeholder-section {
-                    border: 1px dashed #333;
-                    border-radius: 8px;
-                    padding: 48px 32px;
-                    margin-bottom: 24px;
-                    text-align: center;
+            .nav-search .search-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-muted);
+                font-size: 14px;
+            }
+
+        .nav-user {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .nav-user .avatar {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: box-shadow 0.2s;
+            }
+
+                .nav-user .avatar:hover {
+                    box-shadow: 0 0 0 3px var(--accent-1-glow);
                 }
 
-                    .placeholder-section h2 {
-                        font-size: 1.2rem;
-                        color: #888;
-                        margin-bottom: 8px;
-                    }
+        .btn-upload-nav {
+            background: var(--accent-1);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: var(--radius-xl);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
 
-                    .placeholder-section p {
-                        color: #555;
-                        font-size: 0.9rem;
-                    }
+            .btn-upload-nav:hover {
+                background: #7c6cf7;
+                box-shadow: var(--shadow-glow);
+            }
 
-                    .placeholder-section .tag {
-                        display: inline-block;
-                        background: #222;
-                        color: #666;
-                        padding: 3px 10px;
-                        border-radius: 12px;
-                        font-size: 0.75rem;
-                        margin: 4px;
-                    }
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            padding-top: var(--nav-height);
+            position: relative;
+            z-index: 1;
+        }
 
-                /* Hero area */
-                .hero {
-                    text-align: center;
-                    padding: 60px 20px;
+        .page {
+            display: none;
+        }
+
+            .page.active {
+                display: block;
+                animation: fadeIn 0.35s ease;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HOMEPAGE ===== */
+        .hero {
+            padding: 80px 32px 50px;
+            text-align: center;
+            position: relative;
+        }
+
+            .hero h1 {
+                font-size: clamp(2.5rem, 6vw, 4.2rem);
+                font-weight: 900;
+                letter-spacing: -2px;
+                line-height: 1.1;
+                margin-bottom: 16px;
+            }
+
+                .hero h1 .gradient-text {
+                    background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
                 }
 
-                    .hero h1 {
-                        font-size: 2.2rem;
-                        color: #fff;
-                        margin-bottom: 12px;
-                    }
+            .hero p {
+                color: var(--text-secondary);
+                font-size: 1.15rem;
+                max-width: 520px;
+                margin: 0 auto 32px;
+            }
 
-                    .hero p {
-                        color: #888;
-                        max-width: 500px;
-                        margin: 0 auto;
-                    }
+        .hero-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-                /* Footer */
-                .footer {
-                    border-top: 1px solid #222;
-                    padding: 32px;
-                    text-align: center;
-                    color: #555;
-                    font-size: 0.8rem;
-                    margin-top: 60px;
+        .btn {
+            padding: 12px 28px;
+            border-radius: var(--radius-xl);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-1);
+            color: #fff;
+        }
+
+            .btn-primary:hover {
+                background: #7c6cf7;
+                box-shadow: var(--shadow-glow);
+                transform: translateY(-2px);
+            }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+            .btn-secondary:hover {
+                border-color: var(--accent-1);
+                background: rgba(108,92,231,0.08);
+            }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 48px;
+            padding: 24px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--accent-1);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 40px 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+            .section-title .emoji {
+                margin-right: 8px;
+            }
+
+        .see-all {
+            color: var(--accent-1);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+            .see-all:hover {
+                text-decoration: underline;
+            }
+
+        /* ===== TAG FILTERS ===== */
+        .tag-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .tag-btn {
+            padding: 6px 16px;
+            border-radius: var(--radius-xl);
+            font-size: 0.82rem;
+            font-weight: 500;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+            .tag-btn:hover, .tag-btn.active {
+                background: var(--accent-1);
+                color: #fff;
+                border-color: var(--accent-1);
+            }
+
+        /* ===== GAME CARDS ===== */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .game-card:hover {
+                transform: translateY(-6px);
+                border-color: var(--accent-1);
+                box-shadow: var(--shadow-card), 0 0 40px var(--accent-1-glow);
+            }
+
+        .game-card-thumb {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+            .game-card-thumb .badge-browser {
+                position: absolute;
+                bottom: 8px;
+                left: 8px;
+                background: rgba(0,0,0,0.7);
+                backdrop-filter: blur(8px);
+                padding: 4px 10px;
+                border-radius: var(--radius-sm);
+                font-size: 0.72rem;
+                font-weight: 600;
+                color: var(--accent-3);
+            }
+
+        .game-card-body {
+            padding: 14px 16px 16px;
+        }
+
+        .game-card-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-card-dev {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .game-card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+            .game-card-tags span {
+                font-size: 0.7rem;
+                padding: 2px 8px;
+                border-radius: var(--radius-xl);
+                background: rgba(108,92,231,0.12);
+                color: var(--accent-1);
+                font-weight: 500;
+            }
+
+        .game-card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+            .game-card-meta .rating {
+                color: var(--warning);
+                font-weight: 600;
+            }
+
+        /* ===== FEATURED BANNER ===== */
+        .featured-banner {
+            max-width: 1280px;
+            margin: 0 auto 20px;
+            padding: 0 32px;
+        }
+
+        .featured-inner {
+            background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(253,126,97,0.1));
+            border: 1px solid rgba(108,92,231,0.25);
+            border-radius: var(--radius-xl);
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .featured-inner:hover {
+                border-color: var(--accent-1);
+                box-shadow: 0 0 60px var(--accent-1-glow);
+            }
+
+        .featured-image {
+            width: 320px;
+            min-width: 320px;
+            aspect-ratio: 16/10;
+            border-radius: var(--radius-md);
+            background-size: cover;
+            background-position: center;
+            box-shadow: var(--shadow-card);
+        }
+
+        .featured-info {
+            flex: 1;
+        }
+
+        .featured-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-2);
+            margin-bottom: 10px;
+        }
+
+        .featured-info h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .featured-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            max-width: 450px;
+        }
+
+        /* ===== GAME DETAIL PAGE ===== */
+        .detail-hero {
+            padding: 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .detail-top {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .detail-media {
+            flex: 1.2;
+        }
+
+        .detail-main-img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: var(--radius-lg);
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+
+        .detail-thumbs {
+            display: flex;
+            gap: 8px;
+        }
+
+            .detail-thumbs div {
+                flex: 1;
+                aspect-ratio: 16/10;
+                border-radius: var(--radius-sm);
+                background-size: cover;
+                background-position: center;
+                border: 2px solid transparent;
+                cursor: pointer;
+                opacity: 0.6;
+                transition: all 0.2s;
+            }
+
+                .detail-thumbs div:hover, .detail-thumbs div.active {
+                    opacity: 1;
+                    border-color: var(--accent-1);
                 }
 
-                
-                input, textarea, button {
-                    width: 100%;
-                    padding: 8px;
-                    margin: 6px 0;
-                    background: #222;
-                    border: 1px solid #444;
-                    color: #ddd;
-                    border-radius: 4px;
+        .detail-sidebar {
+            flex: 0.8;
+        }
+
+            .detail-sidebar h1 {
+                font-size: 2rem;
+                font-weight: 800;
+                letter-spacing: -1px;
+                margin-bottom: 8px;
+            }
+
+        .detail-dev-link {
+            color: var(--accent-1);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .detail-desc {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .btn-play {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent-1), #8b7cf7);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            transition: all 0.25s;
+        }
+
+            .btn-play:hover {
+                box-shadow: var(--shadow-glow);
+                transform: translateY(-2px);
+            }
+
+        .btn-download {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+            .btn-download:hover {
+                border-color: var(--accent-1);
+            }
+
+        .detail-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .detail-meta-item {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+            .detail-meta-item .label {
+                font-size: 0.72rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
+                margin-bottom: 4px;
+            }
+
+            .detail-meta-item .value {
+                font-weight: 600;
+                font-size: 0.95rem;
+            }
+
+        .detail-tags-section {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+            .detail-tags-section span {
+                padding: 5px 14px;
+                border-radius: var(--radius-xl);
+                background: rgba(108,92,231,0.12);
+                color: var(--accent-1);
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+        /* Reviews */
+        .reviews-section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px 60px;
+        }
+
+            .reviews-section h3 {
+                font-size: 1.3rem;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+
+        .review-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+            .review-form textarea {
+                width: 100%;
+                background: var(--bg-input);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                color: var(--text-primary);
+                padding: 14px;
+                font-size: 0.9rem;
+                resize: vertical;
+                min-height: 80px;
+                outline: none;
+                margin-bottom: 12px;
+            }
+
+                .review-form textarea:focus {
+                    border-color: var(--accent-1);
+                    box-shadow: 0 0 0 3px var(--accent-1-glow);
                 }
 
-                button {
-                    background: #7c6cf7;
-                    border: none;
-                    cursor: pointer;
+        .star-rating-input {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+            .star-rating-input span {
+                font-size: 1.4rem;
+                cursor: pointer;
+                color: var(--border);
+                transition: color 0.15s;
+            }
+
+                .star-rating-input span.filled {
+                    color: var(--warning);
                 }
 
-                    button:hover {
-                        background: #6a5de0;
-                    }
+        .review-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 12px;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .review-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-3), var(--accent-1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .review-user {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .review-date {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .review-stars {
+            color: var(--warning);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .review-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .dev-reply {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: rgba(108,92,231,0.08);
+            border-left: 3px solid var(--accent-1);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .dev-reply-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-1);
+            margin-bottom: 4px;
+        }
+
+        .dev-reply-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== UPLOAD PAGE ===== */
+        .upload-page {
+            max-width: 740px;
+            margin: 0 auto;
+            padding: 48px 32px 80px;
+        }
+
+            .upload-page h1 {
+                font-size: 2rem;
+                font-weight: 800;
+                letter-spacing: -1px;
+                margin-bottom: 8px;
+            }
+
+            .upload-page .subtitle {
+                color: var(--text-secondary);
+                margin-bottom: 36px;
+            }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+            }
+
+                .form-group label .required {
+                    color: var(--accent-2);
+                }
+
+        .form-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+            .form-input:focus {
+                border-color: var(--accent-1);
+                box-shadow: 0 0 0 3px var(--accent-1-glow);
+            }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239896a8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        .dropzone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-input);
+        }
+
+            .dropzone:hover {
+                border-color: var(--accent-1);
+                background: rgba(108,92,231,0.05);
+            }
+
+            .dropzone.dragover {
+                border-color: var(--accent-1);
+                background: rgba(108,92,231,0.1);
+                box-shadow: 0 0 0 4px var(--accent-1-glow);
+            }
+
+        .dropzone-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .dropzone-text {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .dropzone-hint {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .upload-file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-top: 12px;
+        }
+
+        .upload-file-icon {
+            font-size: 1.3rem;
+        }
+
+        .upload-file-name {
+            flex: 1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .upload-file-size {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .upload-file-remove {
+            color: var(--danger);
+            background: none;
+            font-size: 1.1rem;
+            padding: 4px;
+        }
+
+        .tag-input-wrap {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 8px 12px;
+            min-height: 44px;
+            align-items: center;
+            cursor: text;
+        }
+
+            .tag-input-wrap:focus-within {
+                border-color: var(--accent-1);
+                box-shadow: 0 0 0 3px var(--accent-1-glow);
+            }
+
+            .tag-input-wrap .tag-item {
+                background: rgba(108,92,231,0.15);
+                color: var(--accent-1);
+                padding: 3px 10px;
+                border-radius: var(--radius-xl);
+                font-size: 0.8rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+        .tag-item .remove-tag {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+            .tag-item .remove-tag:hover {
+                opacity: 1;
+            }
+
+        .tag-input-wrap input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-hint {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            margin-top: 6px;
+        }
+
+        .upload-submit-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .upload-progress {
+            display: none;
+            margin-top: 24px;
+        }
+
+            .upload-progress.active {
+                display: block;
+            }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: var(--bg-input);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-3));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== PROFILE / LOGIN PAGE ===== */
+        .auth-page {
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 60px 32px 80px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 32px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            background: transparent;
+            transition: all 0.2s;
+        }
+
+            .auth-tab.active {
+                background: var(--accent-1);
+                color: #fff;
+            }
+
+        .auth-form {
+            display: none;
+        }
+
+            .auth-form.active {
+                display: block;
+            }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+            .auth-divider::before, .auth-divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
+
+        .persona-select {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .persona-option {
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .persona-option:hover {
+                border-color: var(--accent-1);
+            }
+
+            .persona-option.selected {
+                border-color: var(--accent-1);
+                background: rgba(108,92,231,0.08);
+            }
+
+            .persona-option .persona-icon {
+                font-size: 1.8rem;
+                margin-bottom: 6px;
+            }
+
+            .persona-option .persona-label {
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+
+        /* Profile view (after login) */
+        .profile-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 32px 80px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 36px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .profile-info h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .profile-info .profile-type {
+            color: var(--accent-1);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .profile-info .profile-joined {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-top: 2px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 24px;
+            margin-left: auto;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .profile-stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .profile-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+        }
+
+        .profile-tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+            .profile-tab-btn:hover {
+                color: var(--text-primary);
+            }
+
+            .profile-tab-btn.active {
+                color: var(--accent-1);
+                background: rgba(108,92,231,0.1);
+                border-color: rgba(108,92,231,0.2);
+            }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--success);
+            border-radius: var(--radius-md);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            z-index: 9999;
+            transform: translateY(120%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+            .toast.show {
+                transform: translateY(0);
+            }
+
+        .toast-icon {
+            font-size: 1.3rem;
+        }
+
+        .toast-msg {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 32px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
+
+            .footer-links a:hover {
+                color: var(--accent-1);
+            }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-links, .nav-search {
+                display: none;
+            }
+
+            .featured-inner {
+                flex-direction: column;
+                padding: 24px;
+            }
+
+            .featured-image {
+                width: 100%;
+                min-width: unset;
+            }
+
+            .detail-top {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                gap: 24px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-stats {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
+    <!-- ===== NAVIGATION ===== -->
     <nav class="nav">
-        <div style="display:flex;align-items:center;gap:32px;">
-            <div class="nav-logo">IndieVault</div>
-            <div class="nav-links">
-                <a href="#">Browse</a>
-                <a href="#">Publish</a>
-                <a href="#">Profile</a>
-            </div>
+        <div class="nav-logo" onclick="navigate('home')">
+            <div class="logo-icon">▶</div>
+            IndieVault
         </div>
-
-        <div id="nav-user" style="color:#7c6cf7;font-size:0.9rem;">Not logged in</div>
+        <div class="nav-links">
+            <a href="#" class="active" data-page="home" onclick="navigate('home')">Browse</a>
+            <a href="#" data-page="upload" onclick="navigate('upload')">Publish</a>
+            <a href="#" data-page="profile" onclick="navigate('profile')">Profile</a>
+        </div>
+        <div class="nav-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search games..." id="globalSearch" oninput="filterGames(this.value)">
+        </div>
+        <div class="nav-user">
+            <button class="btn-upload-nav" onclick="navigate('upload')">＋ Publish</button>
+            <div class="avatar" onclick="navigate('profile')" id="navAvatar">JG</div>
+        </div>
     </nav>
 
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✅</span>
+        <span class="toast-msg" id="toastMsg">Success!</span>
+    </div>
 
-
-    <!-- Main Content -->
+    <!-- ===== MAIN ===== -->
     <main class="main">
 
-        <!-- Hero / Landing -->
-        <div class="hero">
-            <h1>IndieVault</h1>
-            <p>A free, safe platform where indie developers publish games and players discover hidden gems.</p>
+        <!-- ========== HOME PAGE ========== -->
+        <div class="page active" id="page-home">
+
+            <div class="hero">
+                <h1>Discover & Publish<br><span class="gradient-text">Indie Games for Free</span></h1>
+                <p>A free, safe platform where indie developers publish games and players discover hidden gems — no fees, no barriers.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="navigate('upload')">🚀 Publish Your Game</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('browseSection').scrollIntoView({behavior:'smooth'})">🎮 Browse Games</button>
+                </div>
+                <div class="stats-bar">
+                    <div class="stat">
+                        <div class="stat-value">2,847</div>
+                        <div class="stat-label">Games</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">14.2K</div>
+                        <div class="stat-label">Developers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">892K</div>
+                        <div class="stat-label">Players</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">$0</div>
+                        <div class="stat-label">Always Free</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured -->
+            <div class="featured-banner">
+                <div class="featured-inner" onclick="navigate('detail', 0)">
+                    <div class="featured-image" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=640&q=80')"></div>
+                    <div class="featured-info">
+                        <div class="featured-label">🔥 Featured Game</div>
+                        <h2>Neon Drift: Velocity</h2>
+                        <p>A high-speed cyberpunk racing game with procedural tracks and an incredible synthwave soundtrack. Made by one developer in just 6 months.</p>
+                        <button class="btn btn-primary">▶ Play in Browser</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browse -->
+            <div class="section" id="browseSection">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="emoji">🎮</span> Browse Games</h2>
+                    <a href="#" class="see-all">View All →</a>
+                </div>
+                <div class="tag-filters" id="tagFilters"></div>
+                <div class="game-grid" id="gameGrid"></div>
+            </div>
+
+            <!-- Recently Added -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title"><span class="emoji">✨</span> Recently Added</h2>
+                </div>
+                <div class="game-grid" id="recentGrid"></div>
+            </div>
+
+            <footer class="footer">
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Developers</a>
+                    <a href="#">Community</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+                <p>IndieVault © 2026 — Free indie games, forever.</p>
+            </footer>
         </div>
 
-        <!-- Game Browsing Section -->
-        <div class="placeholder-section">
-            <h2>Game Browsing</h2>
-            <p>Game cards and search/filter functionality will go here.</p>
-            <div style="margin-top: 12px;">
-                <span class="tag">Search</span>
-                <span class="tag">Filter by tag</span>
-                <span class="tag">Game cards</span>
-                <span class="tag">Ratings</span>
+        <!-- ========== GAME DETAIL PAGE ========== -->
+        <div class="page" id="page-detail">
+            <div class="detail-hero">
+                <div class="detail-top">
+                    <div class="detail-media">
+                        <div class="detail-main-img" id="detailMainImg"></div>
+                        <div class="detail-thumbs" id="detailThumbs"></div>
+                    </div>
+                    <div class="detail-sidebar">
+                        <h1 id="detailTitle"></h1>
+                        <a href="#" class="detail-dev-link" id="detailDev"></a>
+                        <p class="detail-desc" id="detailDesc"></p>
+                        <div class="detail-actions">
+                            <button class="btn-play" onclick="showToast('🎮 Launching game in browser...')">▶ Play in Browser</button>
+                            <button class="btn-download" onclick="downloadGameFile(currentGameId)">⬇ Download</button>
+                        </div>
+                        <div class="detail-meta-grid" id="detailMeta"></div>
+                        <div class="detail-tags-section" id="detailTags"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="reviews-section">
+                <h3>💬 Reviews & Feedback</h3>
+                <div class="review-form">
+                    <div class="star-rating-input" id="starInput"></div>
+                    <textarea placeholder="Share your thoughts about this game..." id="reviewText"></textarea>
+                    <button class="btn btn-primary" onclick="submitReview()">Post Review</button>
+                </div>
+                <div id="reviewsList"></div>
             </div>
         </div>
 
-        <!-- Game Detail Section -->
-        <div class="placeholder-section">
-            <h2>Game Detail Page</h2>
-            <p>Individual game view with screenshots, description, reviews, and play/download buttons.</p>
-            <div style="margin-top: 12px;">
-                <span class="tag">Screenshots</span>
-                <span class="tag">Reviews</span>
-                <span class="tag">Play in Browser</span>
-                <span class="tag">Download</span>
+        <!-- ========== UPLOAD PAGE ========== -->
+        <div class="page" id="page-upload">
+            <div class="upload-page">
+                <h1>🚀 Publish Your Game</h1>
+                <p class="subtitle">Upload your game in minutes — no fees, no approval process. Just drag, drop, and go live.</p>
+
+                <div class="form-group">
+                    <label>Game Title <span class="required">*</span></label>
+                    <input type="text" class="form-input" placeholder="e.g. Neon Drift: Velocity" id="uploadTitle">
+                </div>
+
+                <div class="form-group">
+                    <label>Short Description <span class="required">*</span></label>
+                    <textarea class="form-input" placeholder="A brief tagline or description for your game (shown in browse cards)..." id="uploadDesc"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Genre <span class="required">*</span></label>
+                        <select class="form-input form-select" id="uploadGenre">
+                            <option value="">Select genre…</option>
+                            <option>Action</option>
+                            <option>Adventure</option>
+                            <option>RPG</option>
+                            <option>Puzzle</option>
+                            <option>Platformer</option>
+                            <option>Horror</option>
+                            <option>Strategy</option>
+                            <option>Simulation</option>
+                            <option>Racing</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <select class="form-input form-select" id="uploadPlatform">
+                            <option>Browser (HTML5)</option>
+                            <option>Windows</option>
+                            <option>macOS</option>
+                            <option>Linux</option>
+                            <option>Cross-Platform</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tag-input-wrap" id="tagInputWrap" onclick="document.getElementById('tagInput').focus()">
+                        <input type="text" placeholder="Type a tag and press Enter…" id="tagInput">
+                    </div>
+                    <p class="form-hint">Add up to 8 tags to help players find your game.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Game Files <span class="required">*</span></label>
+                    <div class="dropzone" id="dropzone">
+                        <div class="dropzone-icon">📁</div>
+                        <div class="dropzone-text">Drag & drop your game files here</div>
+                        <div class="dropzone-hint">or click to browse · ZIP, HTML, EXE up to 500 MB</div>
+                    </div>
+                    <div id="fileList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cover Image</label>
+                    <div class="dropzone" id="coverDropzone" style="padding: 32px 24px;">
+                        <div class="dropzone-icon">🖼️</div>
+                        <div class="dropzone-text">Upload cover image</div>
+                        <div class="dropzone-hint">PNG or JPG · 16:9 recommended · Max 5 MB</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Screenshots</label>
+                    <div class="dropzone" id="screenshotDropzone" style="padding: 32px 24px;">
+                        <div class="dropzone-icon">📸</div>
+                        <div class="dropzone-text">Upload screenshots (up to 5)</div>
+                        <div class="dropzone-hint">PNG or JPG · These appear on your game page</div>
+                    </div>
+                </div>
+
+                <div class="upload-progress" id="uploadProgress">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Uploading...</div>
+                </div>
+
+                <div class="upload-submit-bar">
+                    <button class="btn btn-primary" onclick="simulateUpload()" style="flex:1;">🚀 Publish Game</button>
+                    <button class="btn btn-secondary">Save as Draft</button>
+                </div>
             </div>
         </div>
 
+        <!-- ========== PROFILE / AUTH PAGE ========== -->
+        <div class="page" id="page-profile">
+            <!-- Auth view (login/signup) -->
+            <div id="authView">
+                <div class="auth-page">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" onclick="switchAuthTab('login')">Log In</button>
+                        <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+                    </div>
 
-        <!-- Publishing Section (MINIMAL CHANGES ADDED) -->
-        <div class="placeholder-section">
-            <h2>Publish / Upload</h2>
-            <p>Developer game upload workflow — drag and drop files, enter game details, go live.</p>
+                    <!-- Login form -->
+                    <div class="auth-form active" id="loginForm">
+                        <div class="form-group">
+                            <label>Email or Username</label>
+                            <input type="text" class="form-input" placeholder="you@example.com" id="loginEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-input" placeholder="••••••••" id="loginPass">
+                        </div>
+                        <button class="btn btn-primary" onclick="doLogin()" style="width:100%; justify-content:center; margin-top:8px;">Log In</button>
+                        <div style="margin-top:14px; padding:12px 16px; background:rgba(108,92,231,0.08); border:1px solid rgba(108,92,231,0.2); border-radius:var(--radius-md); font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
+                            <strong style="color:var(--accent-1);">Demo Accounts:</strong><br>
+                            👩‍💻 Developer — <span style="color:var(--text-primary)">jose</span> / <span style="color:var(--text-primary)">password123</span><br>
+                            🎮 Player — <span style="color:var(--text-primary)">ahu</span> / <span style="color:var(--text-primary)">gamer456</span><br>
+                            🎮 Player — <span style="color:var(--text-primary)">steven</span> / <span style="color:var(--text-primary)">indie789</span>
+                        </div>
+                        <div class="auth-divider">or</div>
+                        <button class="btn btn-secondary" style="width:100%; justify-content:center;">Continue with GitHub</button>
+                    </div>
 
-            <!-- ADDED: Fake drag-and-drop + confirmation -->
-            <div style="border:2px dashed #444;padding:20px;margin:15px 0;border-radius:8px;">
-                <p style="color:#777;">Drag & Drop your .zip file here</p>
-                <p style="color:#777;">(Upload functionality coming in Sprint 2)</p>
+                    <!-- Signup form -->
+                    <div class="auth-form" id="signupForm">
+                        <div class="form-group">
+                            <label>I am a…</label>
+                            <div class="persona-select">
+                                <div class="persona-option selected" onclick="selectPersona(this, 'dev')">
+                                    <div class="persona-icon">👩‍💻</div>
+                                    <div class="persona-label">Developer</div>
+                                </div>
+                                <div class="persona-option" onclick="selectPersona(this, 'player')">
+                                    <div class="persona-icon">🎮</div>
+                                    <div class="persona-label">Player</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Username <span class="required">*</span></label>
+                            <input type="text" class="form-input" placeholder="cooldev42" id="signupUsername">
+                        </div>
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="text" class="form-input" placeholder="you@example.com" id="signupEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Password <span class="required">*</span></label>
+                            <input type="password" class="form-input" placeholder="••••••••" id="signupPass">
+                        </div>
+                        <button class="btn btn-primary" onclick="doSignup()" style="width:100%; justify-content:center; margin-top:8px;">Create Account</button>
+                    </div>
+                </div>
             </div>
 
-            <input id="publish-title" type="text" placeholder="Game Title">
-            <textarea id="publish-desc" placeholder="Description"></textarea>
-            <input id="publish-tags" type="text" placeholder="Tags">
+            <!-- Profile view (after login) -->
+            <div id="profileView" style="display:none;">
+                <div class="profile-page">
+                    <div class="profile-header">
+                        <div class="profile-avatar">JG</div>
+                        <div class="profile-info">
+                            <h2>JGBProductions</h2>
+                            <div class="profile-type">👩‍💻 Developer</div>
+                            <div class="profile-joined">Joined April 2026</div>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">3</div>
+                                <div class="profile-stat-label">Games</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">1.2K</div>
+                                <div class="profile-stat-label">Plays</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-val">47</div>
+                                <div class="profile-stat-label">Reviews</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <button id="publish-submit">Submit Game</button>
+                    <div class="profile-tabs">
+                        <button class="profile-tab-btn active">My Games</button>
+                        <button class="profile-tab-btn">Favorites</button>
+                        <button class="profile-tab-btn">Settings</button>
+                    </div>
 
+                    <div class="game-grid" id="profileGames"></div>
 
-
-
-            <!-- ADDED: Fake submission confirmation -->
-
-            <div style="margin-top: 12px;">
-                <span class="tag">Drag & Drop</span>
-                <span class="tag">Game Metadata</span>
-                <span class="tag">Tags</span>
-                <span class="tag">Cover Image</span>
+                    <div style="margin-top:32px;">
+                        <button class="btn btn-secondary" onclick="doLogout()">Log Out</button>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <!-- User Account Section (MINIMAL CHANGES ADDED) -->
-        <div class="placeholder-section">
-            <h2>User Accounts</h2>
-            <p>Login / Signup forms, profile pages for developers and players.</p>
-            <!-- Example credentials (added) -->
-            <p style="color:#888;margin-bottom:10px;">
-                Example login:<br>
-                <strong>Username:</strong> demoUser<br>
-                <strong>Password:</strong> demoPass
-            </p>
-
-            <form style="max-width:300px;margin:0 auto;text-align:left;">
-                <input id="login-user" type="text" placeholder="Username">
-                <input id="login-pass" type="password" placeholder="Password">
-                <button id="login-btn">Log In</button>
-            </form>
-
-            <p id="login-status" style="margin-top:10px;color:#888;"></p>
-
-            <!-- No hardcoded success/error messages -->
-
-            <div style="margin-top: 12px;">
-                <span class="tag">Login</span>
-                <span class="tag">Signup</span>
-                <span class="tag">Dev Profile</span>
-                <span class="tag">Player Profile</span>
-            </div>
-        </div>
-
-        <!-- ADDED: Developer Dashboard -->
-        <div class="placeholder-section">
-            <h2>Developer Dashboard</h2>
-            <p>Your Published Games:</p>
-            <ul id="dev-game-list" style="color:#aaa;margin-top:10px;list-style:none;padding:0;"></ul>
-
-
-        </div>
-
-        <!-- TODO List -->
-        <div style="margin-top: 48px; padding: 24px; background: #1a1a1a; border-radius: 8px; border: 1px solid #333;">
-            <h3 style="color: #aaa; font-size: 1rem; margin-bottom: 16px;">Project Roadmap</h3>
-            <ul style="list-style: none; font-size: 0.85rem; color: #777; line-height: 2;">
-                <li>[ ] Set up GitHub repository</li>
-                <li>[ ] Create base HTML structure</li>
-                <li>[ ] Design navigation and page routing</li>
-                <li>[&nbsp;] Build game browsing with cards and filters</li>
-                <li>[&nbsp;] Build publishing workflow UI</li>
-                <li>[&nbsp;] Implement user login (hardcoded)</li>
-                <li>[&nbsp;] Create developer profile page</li>
-                <li>[&nbsp;] Create player profile page</li>
-                <li>[&nbsp;] Build game detail page with reviews</li>
-                <li>[&nbsp;] Add download functionality</li>
-                <li>[&nbsp;] Polish UI, animations, and responsive design</li>
-            </ul>
         </div>
 
     </main>
 
-    <footer class="footer">
-        IndieVault &copy; 2026 � JGBProductions � MCS3653 HW5
-    </footer>
-
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        // ===== MOCK DATA =====
+        const GAMES = [
+            {
+                id: 0,
+                title: "Neon Drift: Velocity",
+                developer: "PixelRacer",
+                desc: "A high-speed cyberpunk racing game with procedural tracks and an incredible synthwave soundtrack. Built by one developer in just 6 months using a custom engine.",
+                tags: ["Racing", "Cyberpunk", "Synthwave", "Procedural"],
+                genre: "Racing",
+                rating: 4.8,
+                plays: 28400,
+                downloads: 5200,
+                browser: true,
+                date: "2026-04-10",
+                img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=640&q=80",
+                    "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=640&q=80",
+                    "https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "SynthLover", avatar: "SL", rating: 5, text: "This game is absolutely incredible. The procedural tracks mean every race feels fresh, and the soundtrack is chef's kiss.", date: "Apr 12, 2026", devReply: "Thanks so much! I spent 2 months on the music system alone. Glad it shows!" },
+                    { user: "SpeedDemon99", avatar: "SD", rating: 5, text: "Best racing game I've played in years and it's FREE? This developer deserves every bit of support.", date: "Apr 11, 2026" },
+                    { user: "CasualGamerMom", avatar: "CG", rating: 4, text: "Really fun! A bit hard for beginners but the tutorial helps. My kids love the neon visuals.", date: "Apr 10, 2026" }
+                ]
+            },
+            {
+                id: 1,
+                title: "Echoes of Solitude",
+                developer: "QuietForge",
+                desc: "A meditative exploration game set in a hauntingly beautiful abandoned space station. No combat — just you, the silence, and the stories left behind.",
+                tags: ["Adventure", "Exploration", "Atmospheric", "Story"],
+                genre: "Adventure",
+                rating: 4.6,
+                plays: 15800,
+                downloads: 3100,
+                browser: true,
+                date: "2026-04-08",
+                img: "https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=640&q=80",
+                    "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=640&q=80",
+                    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "ArtHouse_Alex", avatar: "AA", rating: 5, text: "This isn't just a game, it's an experience. The environmental storytelling is masterclass level.", date: "Apr 9, 2026" },
+                    { user: "NightOwlGamer", avatar: "NO", rating: 4, text: "Beautiful atmosphere but I wish it was a bit longer. Finished it in about 2 hours.", date: "Apr 8, 2026", devReply: "An extended chapter is coming next month! Stay tuned." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Pixel Dungeon Tactics",
+                developer: "JGBProductions",
+                desc: "A turn-based tactical RPG with randomly generated dungeons, permadeath, and 40+ unique character classes. Inspired by classic roguelikes.",
+                tags: ["RPG", "Tactics", "Roguelike", "Pixel Art"],
+                genre: "RPG",
+                rating: 4.5,
+                plays: 42100,
+                downloads: 12400,
+                browser: false,
+                date: "2026-03-22",
+                img: "https://images.unsplash.com/photo-1550063873-ab792950096b?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1550063873-ab792950096b?w=640&q=80",
+                    "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=640&q=80",
+                    "https://images.unsplash.com/photo-1511882150382-421056c89033?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "TacticsFan", avatar: "TF", rating: 5, text: "40+ classes is no joke. I've been playing for weeks and still discovering new combos.", date: "Apr 5, 2026" },
+                    { user: "RetroRoger", avatar: "RR", rating: 4, text: "Reminds me of the old SNES golden age. Great work keeping that spirit alive.", date: "Mar 28, 2026" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Cloud Jumper",
+                developer: "SkySoft",
+                desc: "A relaxing platformer where you bounce between clouds in a pastel sky. Simple controls, infinite levels, and a lo-fi soundtrack to chill to.",
+                tags: ["Platformer", "Casual", "Lo-Fi", "Relaxing"],
+                genre: "Platformer",
+                rating: 4.3,
+                plays: 67300,
+                downloads: 890,
+                browser: true,
+                date: "2026-04-14",
+                img: "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=640&q=80",
+                    "https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=640&q=80",
+                    "https://images.unsplash.com/photo-1536514498073-50e69d39c6cf?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "ChillVibes", avatar: "CV", rating: 5, text: "I play this every night before bed. The music is so soothing.", date: "Apr 15, 2026" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Hex Code: Override",
+                developer: "CipherGames",
+                desc: "A hacking puzzle game where you crack firewalls and decrypt data by solving logic puzzles under time pressure. 60 hand-crafted levels.",
+                tags: ["Puzzle", "Hacking", "Cyberpunk", "Logic"],
+                genre: "Puzzle",
+                rating: 4.7,
+                plays: 19500,
+                downloads: 4700,
+                browser: true,
+                date: "2026-04-03",
+                img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=640&q=80",
+                    "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=640&q=80",
+                    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "PuzzleMaster", avatar: "PM", rating: 5, text: "Level 47 had me stuck for three days. That 'aha' moment was worth every second.", date: "Apr 6, 2026" },
+                    { user: "CodeMonkey", avatar: "CM", rating: 4, text: "Great concept! Some of the later puzzles feel a bit unfair though.", date: "Apr 4, 2026", devReply: "Thanks for the feedback! I'm rebalancing levels 50-60 in the next patch." }
+                ]
+            },
+            {
+                id: 5,
+                title: "Depths Below",
+                developer: "AbyssWorks",
+                desc: "A deep-sea survival horror game. You pilot a damaged submarine through pitch-black ocean trenches, avoiding creatures that hunt by sound.",
+                tags: ["Horror", "Survival", "Underwater", "Atmospheric"],
+                genre: "Horror",
+                rating: 4.9,
+                plays: 31200,
+                downloads: 8900,
+                browser: false,
+                date: "2026-03-15",
+                img: "https://images.unsplash.com/photo-1551244072-5d12893278ab?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1551244072-5d12893278ab?w=640&q=80",
+                    "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=640&q=80",
+                    "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "HorrorFanatic", avatar: "HF", rating: 5, text: "I had to stop playing twice because my heart was pounding. 10/10.", date: "Mar 20, 2026" },
+                    { user: "DeepDiver", avatar: "DD", rating: 5, text: "The sound design is insane. Play with headphones or don't play at all.", date: "Mar 18, 2026" }
+                ]
+            },
+            {
+                id: 6,
+                title: "Garden of Algorithms",
+                developer: "JGBProductions",
+                desc: "A cozy puzzle game where you grow digital gardens by solving algorithm challenges. Learn real CS concepts while tending virtual flowers.",
+                tags: ["Puzzle", "Educational", "Cozy", "Programming"],
+                genre: "Puzzle",
+                rating: 4.4,
+                plays: 8900,
+                downloads: 2100,
+                browser: true,
+                date: "2026-04-01",
+                img: "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=640&q=80",
+                    "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=640&q=80",
+                    "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=640&q=80"
+                ],
+                reviews: [
+                    { user: "LearnToCode", avatar: "LC", rating: 5, text: "I learned more about sorting algorithms from this game than my college class.", date: "Apr 3, 2026" }
+                ]
+            },
+            {
+                id: 7,
+                title: "Starfall Arena",
+                developer: "JGBProductions",
+                desc: "A fast-paced multiplayer space shooter with local co-op support. Choose from 12 ships, each with unique abilities and upgrade paths.",
+                tags: ["Action", "Shooter", "Multiplayer", "Space"],
+                genre: "Action",
+                rating: 4.2,
+                plays: 11300,
+                downloads: 3400,
+                browser: true,
+                date: "2026-02-18",
+                img: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=640&q=80",
+                screenshots: [
+                    "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=640&q=80",
+                    "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=640&q=80",
+                    "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=640&q=80"
+                ],
+                reviews: []
+            }
+        ];
 
-            // --- LOGIN LOGIC ---
-            const loginBtn = document.getElementById("login-btn");
-            const loginUser = document.getElementById("login-user");
-            const loginPass = document.getElementById("login-pass");
-            const loginStatus = document.getElementById("login-status");
-            const navUser = document.getElementById("nav-user");
+        const ALL_TAGS = ["All", "Action", "Adventure", "RPG", "Puzzle", "Platformer", "Horror", "Racing", "Casual", "Strategy"];
 
-            const VALID_USER = "demoUser";
-            const VALID_PASS = "demoPass";
+        // ===== STATE =====
+        let currentPage = 'home';
+        let currentGameId = 0;
+        let activeTag = 'All';
+        let isLoggedIn = false;
+        let uploadTags = [];
 
-            loginBtn.addEventListener("click", (e) => {
-                e.preventDefault();
+        // ===== NAVIGATION =====
+        function navigate(page, gameId) {
+            // hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
 
-                if (loginUser.value === VALID_USER && loginPass.value === VALID_PASS) {
-                    navUser.textContent = "Logged in as: " + VALID_USER;
-                    loginStatus.style.color = "#4caf50";
-                    loginStatus.textContent = "Login successful.";
-                } else {
-                    loginStatus.style.color = "#f44336";
-                    loginStatus.textContent = "Invalid username or password.";
-                }
-                loginUser.value = "";
-                loginPass.value = "";
+            if (page === 'detail' && gameId !== undefined) {
+                currentGameId = gameId;
+                document.getElementById('page-detail').classList.add('active');
+                renderDetail(gameId);
+                window.scrollTo(0, 0);
+                return;
+            }
 
+            currentPage = page;
+            document.getElementById('page-' + page).classList.add('active');
+            const navLink = document.querySelector(`.nav-links a[data-page="${page}"]`);
+            if (navLink) navLink.classList.add('active');
+            window.scrollTo(0, 0);
+
+            if (page === 'profile') {
+                document.getElementById('authView').style.display = isLoggedIn ? 'none' : 'block';
+                document.getElementById('profileView').style.display = isLoggedIn ? 'block' : 'none';
+                if (isLoggedIn) renderProfileGames();
+            }
+        }
+
+        // ===== RENDER HOME =====
+        function renderTagFilters() {
+            const container = document.getElementById('tagFilters');
+            container.innerHTML = ALL_TAGS.map(tag =>
+                `<button class="tag-btn ${tag === activeTag ? 'active' : ''}" onclick="setTag('${tag}')">${tag}</button>`
+            ).join('');
+        }
+
+        function setTag(tag) {
+            activeTag = tag;
+            renderTagFilters();
+            renderGameGrid();
+        }
+
+        function renderGameGrid() {
+            const container = document.getElementById('gameGrid');
+            const filtered = activeTag === 'All' ? GAMES : GAMES.filter(g => g.tags.includes(activeTag) || g.genre === activeTag);
+            container.innerHTML = filtered.map(g => gameCard(g)).join('');
+        }
+
+        function renderRecentGrid() {
+            const container = document.getElementById('recentGrid');
+            const recent = [...GAMES].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+            container.innerHTML = recent.map(g => gameCard(g)).join('');
+        }
+
+        function gameCard(g) {
+            return `
+        <div class="game-card" onclick="navigate('detail', ${g.id})">
+          <div class="game-card-thumb" style="background-image: url('${g.img}')">
+            ${g.browser ? '<div class="badge-browser">▶ PLAY IN BROWSER</div>' : ''}
+          </div>
+          <div class="game-card-body">
+            <div class="game-card-title">${g.title}</div>
+            <div class="game-card-dev">by ${g.developer}</div>
+            <div class="game-card-tags">${g.tags.slice(0, 3).map(t => `<span>${t}</span>`).join('')}</div>
+            <div class="game-card-meta">
+              <span class="rating">★ ${g.rating}</span>
+              <span>${formatNum(g.plays)} plays</span>
+            </div>
+          </div>
+        </div>`;
+        }
+
+        function filterGames(query) {
+            const container = document.getElementById('gameGrid');
+            const q = query.toLowerCase();
+            const filtered = GAMES.filter(g =>
+                g.title.toLowerCase().includes(q) ||
+                g.developer.toLowerCase().includes(q) ||
+                g.tags.some(t => t.toLowerCase().includes(q))
+            );
+            container.innerHTML = filtered.map(g => gameCard(g)).join('');
+        }
+
+        // ===== RENDER DETAIL =====
+        function renderDetail(id) {
+            const g = GAMES[id];
+            document.getElementById('detailMainImg').style.backgroundImage = `url('${g.img}')`;
+            document.getElementById('detailTitle').textContent = g.title;
+            document.getElementById('detailDev').textContent = `by ${g.developer}`;
+            document.getElementById('detailDesc').textContent = g.desc;
+
+            // Thumbnails
+            document.getElementById('detailThumbs').innerHTML = g.screenshots.map((s, i) =>
+                `<div class="${i === 0 ? 'active' : ''}" style="background-image:url('${s}')" onclick="this.parentElement.querySelectorAll('div').forEach(d=>d.classList.remove('active'));this.classList.add('active');document.getElementById('detailMainImg').style.backgroundImage='url(\\'${s}\\')'"></div>`
+            ).join('');
+
+            // Meta
+            document.getElementById('detailMeta').innerHTML = `
+        <div class="detail-meta-item"><div class="label">Rating</div><div class="value" style="color:var(--warning)">★ ${g.rating}</div></div>
+        <div class="detail-meta-item"><div class="label">Total Plays</div><div class="value">${formatNum(g.plays)}</div></div>
+        <div class="detail-meta-item"><div class="label">Downloads</div><div class="value">${formatNum(g.downloads)}</div></div>
+        <div class="detail-meta-item"><div class="label">Released</div><div class="value">${g.date}</div></div>
+        <div class="detail-meta-item"><div class="label">Genre</div><div class="value">${g.genre}</div></div>
+        <div class="detail-meta-item"><div class="label">Platform</div><div class="value">${g.browser ? 'Browser / Download' : 'Download Only'}</div></div>
+      `;
+
+            // Tags
+            document.getElementById('detailTags').innerHTML = g.tags.map(t => `<span>${t}</span>`).join('');
+
+            // Star input
+            document.getElementById('starInput').innerHTML = [1, 2, 3, 4, 5].map(i =>
+                `<span onclick="setStars(${i})" onmouseover="hoverStars(${i})" onmouseout="resetStars()">★</span>`
+            ).join('');
+
+            // Reviews
+            renderReviews(g);
+        }
+
+        let selectedStars = 0;
+        function setStars(n) {
+            selectedStars = n;
+            document.querySelectorAll('#starInput span').forEach((s, i) => {
+                s.classList.toggle('filled', i < n);
             });
-
-            // --- GAME UPLOAD LOGIC ---
-            const publishBtn = document.getElementById("publish-submit");
-            const publishTitle = document.getElementById("publish-title");
-            const publishDesc = document.getElementById("publish-desc");
-            const publishTags = document.getElementById("publish-tags");
-            const devList = document.getElementById("dev-game-list");
-
-            publishBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-
-                // Only add if title is not empty
-                if (publishTitle.value.trim() !== "") {
-                    const li = document.createElement("li");
-                    li.textContent = publishTitle.value.trim();
-                    devList.appendChild(li);
-                }
-
-                // Clear fields
-                publishTitle.value = "";
-                publishDesc.value = "";
-                publishTags.value = "";
+        }
+        function hoverStars(n) {
+            document.querySelectorAll('#starInput span').forEach((s, i) => {
+                s.classList.toggle('filled', i < n);
             });
+        }
+        function resetStars() {
+            document.querySelectorAll('#starInput span').forEach((s, i) => {
+                s.classList.toggle('filled', i < selectedStars);
+            });
+        }
 
+        function renderReviews(g) {
+            document.getElementById('reviewsList').innerHTML = g.reviews.map(r => `
+        <div class="review-card">
+          <div class="review-header">
+            <div class="review-avatar">${r.avatar}</div>
+            <span class="review-user">${r.user}</span>
+            <span class="review-date">${r.date}</span>
+          </div>
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+          <div class="review-text">${r.text}</div>
+          ${r.devReply ? `
+            <div class="dev-reply">
+              <div class="dev-reply-label">👩‍💻 Developer Response</div>
+              <div class="dev-reply-text">${r.devReply}</div>
+            </div>` : ''}
+        </div>
+      `).join('');
+        }
+
+        function submitReview() {
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text || selectedStars === 0) {
+                showToast('⚠️ Please add a rating and comment');
+                return;
+            }
+            const g = GAMES[currentGameId];
+            g.reviews.unshift({
+                user: currentUser ? currentUser.username : 'Guest',
+                avatar: currentUser ? currentUser.initials : 'G',
+                rating: selectedStars,
+                text: text,
+                date: 'Just now'
+            });
+            renderReviews(g);
+            document.getElementById('reviewText').value = '';
+            selectedStars = 0;
+            resetStars();
+            showToast('✅ Review posted!');
+        }
+
+        // ===== UPLOAD PAGE =====
+        // Tag input
+        document.getElementById('tagInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                e.preventDefault();
+                if (uploadTags.length >= 8) return;
+                uploadTags.push(this.value.trim());
+                this.value = '';
+                renderUploadTags();
+            }
         });
+
+        function renderUploadTags() {
+            const wrap = document.getElementById('tagInputWrap');
+            const input = document.getElementById('tagInput');
+            wrap.querySelectorAll('.tag-item').forEach(t => t.remove());
+            uploadTags.forEach((tag, i) => {
+                const el = document.createElement('span');
+                el.className = 'tag-item';
+                el.innerHTML = `${tag} <span class="remove-tag" onclick="removeUploadTag(${i})">✕</span>`;
+                wrap.insertBefore(el, input);
+            });
+        }
+
+        function removeUploadTag(i) {
+            uploadTags.splice(i, 1);
+            renderUploadTags();
+        }
+
+        // Dropzone
+        ['dropzone', 'coverDropzone', 'screenshotDropzone'].forEach(id => {
+            const dz = document.getElementById(id);
+            dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+            dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+            dz.addEventListener('drop', e => {
+                e.preventDefault();
+                dz.classList.remove('dragover');
+                if (id === 'dropzone') handleFiles(e.dataTransfer.files);
+                else showToast('📎 Image selected!');
+            });
+            dz.addEventListener('click', () => {
+                if (id === 'dropzone') {
+                    handleFiles([{ name: 'my-game-v1.0.zip', size: 48200000 }]);
+                } else {
+                    showToast('📎 Image selected!');
+                }
+            });
+        });
+
+        function handleFiles(files) {
+            const list = document.getElementById('fileList');
+            for (const f of files) {
+                list.innerHTML += `
+          <div class="upload-file-item">
+            <span class="upload-file-icon">📦</span>
+            <span class="upload-file-name">${f.name}</span>
+            <span class="upload-file-size">${(f.size / 1000000).toFixed(1)} MB</span>
+            <button class="upload-file-remove" onclick="this.parentElement.remove()">✕</button>
+          </div>`;
+            }
+        }
+
+        function simulateUpload() {
+            const title = document.getElementById('uploadTitle').value.trim();
+            if (!title) { showToast('⚠️ Please enter a game title'); return; }
+
+            const desc = document.getElementById('uploadDesc').value.trim() || 'A brand new indie game published on IndieVault.';
+            const genre = document.getElementById('uploadGenre').value || 'Action';
+            const platform = document.getElementById('uploadPlatform').value || 'Browser (HTML5)';
+            const tags = uploadTags.length > 0 ? [...uploadTags] : [genre, 'Indie', 'New'];
+            const isBrowser = platform.includes('Browser');
+            const devName = (currentUser && currentUser.username) ? currentUser.username : 'Anonymous Dev';
+
+            const prog = document.getElementById('uploadProgress');
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            prog.classList.add('active');
+            let pct = 0;
+            const iv = setInterval(() => {
+                pct += Math.random() * 15 + 5;
+                if (pct >= 100) {
+                    pct = 100;
+                    clearInterval(iv);
+                    text.textContent = '✅ Published! Your game is now live.';
+                    fill.style.background = 'linear-gradient(90deg, var(--success), var(--accent-3))';
+
+                    // Add the new game to the GAMES array
+                    const placeholderImgs = [
+                        'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=640&q=80',
+                        'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=640&q=80',
+                        'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=640&q=80'
+                    ];
+                    const newGame = {
+                        id: GAMES.length,
+                        title: title,
+                        developer: devName,
+                        desc: desc,
+                        tags: tags.slice(0, 4),
+                        genre: genre,
+                        rating: 0,
+                        plays: 0,
+                        downloads: 0,
+                        browser: isBrowser,
+                        date: new Date().toISOString().split('T')[0],
+                        img: placeholderImgs[0],
+                        screenshots: placeholderImgs,
+                        reviews: []
+                    };
+                    GAMES.push(newGame);
+
+                    // Re-render grids so the game shows up on the home page
+                    renderGameGrid();
+                    renderRecentGrid();
+                    if (isLoggedIn) {
+                        if (currentUser.type === 'Developer') {
+                            currentUser.gamesCount = GAMES.filter(g => g.developer === currentUser.username).length;
+                            document.querySelectorAll('.profile-stat-val')[0].textContent = currentUser.gamesCount;
+                        }
+                        renderProfileGames();
+                    }
+
+                    showToast('🎉 Game published successfully!');
+
+                    // Reset the form for next upload
+                    document.getElementById('uploadTitle').value = '';
+                    document.getElementById('uploadDesc').value = '';
+                    document.getElementById('uploadGenre').selectedIndex = 0;
+                    document.getElementById('uploadPlatform').selectedIndex = 0;
+                    document.getElementById('fileList').innerHTML = '';
+                    uploadTags = [];
+                    renderUploadTags();
+                }
+                fill.style.width = pct + '%';
+                if (pct < 100) text.textContent = `Uploading... ${Math.round(pct)}%`;
+            }, 300);
+        }
+
+        // ===== AUTH / PROFILE =====
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            if (tab === 'login') {
+                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('signupForm').classList.add('active');
+            }
+        }
+
+        function selectPersona(el, type) {
+            document.querySelectorAll('.persona-option').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // Hardcoded user accounts
+        const USERS = {
+            'jose': { password: 'password123', username: 'JGBProductions', initials: 'JG', type: 'Developer', joined: 'April 2026', gamesCount: 3, plays: '1.2K', reviews: 47 },
+            'ahu': { password: 'gamer456', username: 'AhuPlays', initials: 'AP', type: 'Player', joined: 'March 2026', gamesCount: 0, plays: '340', reviews: 12 },
+            'steven': { password: 'indie789', username: 'StevenExplores', initials: 'SE', type: 'Player', joined: 'Feb 2026', gamesCount: 0, plays: '890', reviews: 31 }
+        };
+        let currentUser = null;
+
+        function doLogin() {
+            const emailField = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const passField = document.getElementById('loginPass').value;
+
+            if (!emailField || !passField) {
+                showToast('⚠️ Please fill in all fields');
+                return;
+            }
+
+            // Check hardcoded credentials (match by username key or by display username)
+            const userKey = Object.keys(USERS).find(k =>
+                k === emailField.toLowerCase() ||
+                USERS[k].username.toLowerCase() === emailField.toLowerCase() ||
+                emailField === k + '@indievault.com'
+            );
+
+            if (!userKey || USERS[userKey].password !== passField) {
+                showToast('❌ Invalid credentials. Try: jose / password123');
+                return;
+            }
+
+            // Show loading state on button
+            const btn = document.querySelector('#loginForm .btn-primary');
+            const origText = btn.textContent;
+            btn.textContent = 'Logging in...';
+            btn.style.opacity = '0.6';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                currentUser = USERS[userKey];
+                isLoggedIn = true;
+                btn.textContent = origText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+
+                // Update profile view with this user's data
+                document.querySelector('.profile-avatar').textContent = currentUser.initials;
+                document.querySelector('.profile-info h2').textContent = currentUser.username;
+                document.querySelector('.profile-info .profile-type').textContent =
+                    (currentUser.type === 'Developer' ? '👩‍💻' : '🎮') + ' ' + currentUser.type;
+                document.querySelector('.profile-info .profile-joined').textContent = 'Joined ' + currentUser.joined;
+                document.querySelectorAll('.profile-stat-val')[0].textContent = currentUser.gamesCount;
+                document.querySelectorAll('.profile-stat-val')[1].textContent = currentUser.plays;
+                document.querySelectorAll('.profile-stat-val')[2].textContent = currentUser.reviews;
+
+                // Update nav avatar
+                document.getElementById('navAvatar').textContent = currentUser.initials;
+
+                document.getElementById('authView').style.display = 'none';
+                document.getElementById('profileView').style.display = 'block';
+                renderProfileGames();
+                showToast('👋 Welcome back, ' + currentUser.username + '!');
+            }, 800);
+        }
+
+        function doSignup() {
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const pass = document.getElementById('signupPass').value;
+            const personaEl = document.querySelector('.persona-option.selected .persona-label');
+            const persona = personaEl ? personaEl.textContent : 'Player';
+
+            if (!username || !email || !pass) {
+                showToast('⚠️ Please fill in all fields');
+                return;
+            }
+
+            const btn = document.querySelector('#signupForm .btn-primary');
+            btn.textContent = 'Creating account...';
+            btn.style.opacity = '0.6';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const initials = username.slice(0, 2).toUpperCase();
+                currentUser = {
+                    username: username,
+                    initials: initials,
+                    type: persona,
+                    joined: 'April 2026',
+                    gamesCount: 0,
+                    plays: '0',
+                    reviews: 0
+                };
+                isLoggedIn = true;
+                btn.textContent = 'Create Account';
+                btn.style.opacity = '1';
+                btn.disabled = false;
+
+                document.querySelector('.profile-avatar').textContent = currentUser.initials;
+                document.querySelector('.profile-info h2').textContent = currentUser.username;
+                document.querySelector('.profile-info .profile-type').textContent =
+                    (currentUser.type === 'Developer' ? '👩‍💻' : '🎮') + ' ' + currentUser.type;
+                document.querySelector('.profile-info .profile-joined').textContent = 'Joined ' + currentUser.joined;
+                document.querySelectorAll('.profile-stat-val')[0].textContent = currentUser.gamesCount;
+                document.querySelectorAll('.profile-stat-val')[1].textContent = currentUser.plays;
+                document.querySelectorAll('.profile-stat-val')[2].textContent = currentUser.reviews;
+                document.getElementById('navAvatar').textContent = currentUser.initials;
+
+                document.getElementById('authView').style.display = 'none';
+                document.getElementById('profileView').style.display = 'block';
+                renderProfileGames();
+                showToast('🎉 Account created! Welcome, ' + currentUser.username + '!');
+            }, 1000);
+        }
+
+        function doLogout() {
+            isLoggedIn = false;
+            currentUser = null;
+            document.getElementById('navAvatar').textContent = '?';
+            document.getElementById('authView').style.display = 'block';
+            document.getElementById('profileView').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPass').value = '';
+            showToast('👋 Logged out');
+        }
+
+        function renderProfileGames() {
+            const container = document.getElementById('profileGames');
+            if (currentUser && currentUser.type === 'Developer') {
+                const myGames = GAMES.filter(g => g.developer === currentUser.username);
+                if (myGames.length > 0) {
+                    container.innerHTML = myGames.map(g => gameCard(g)).join('');
+                } else {
+                    container.innerHTML = '<p style="color:var(--text-muted); padding:24px; text-align:center;">No games published yet. <a href="#" onclick="navigate(\'upload\')" style="color:var(--accent-1);">Publish your first game →</a></p>';
+                }
+            } else {
+                container.innerHTML = '<p style="color:var(--text-muted); padding:24px; text-align:center;">Your favorited games will appear here.</p>';
+            }
+        }
+
+        // ===== DOWNLOAD =====
+        function downloadGameFile(gameId) {
+            const g = GAMES[gameId];
+            // Generate a dummy game file (README) as the "download"
+            const content = [
+                '========================================',
+                '  ' + g.title,
+                '  by ' + g.developer,
+                '========================================',
+                '',
+                'ABOUT THIS GAME',
+                '----------------',
+                g.desc,
+                '',
+                'GENRE: ' + g.genre,
+                'TAGS: ' + g.tags.join(', '),
+                'RATING: ' + g.rating + ' / 5',
+                'TOTAL PLAYS: ' + g.plays.toLocaleString(),
+                '',
+                'HOW TO PLAY',
+                '------------',
+                g.browser
+                    ? 'This game runs in your browser! Visit IndieVault and click "Play in Browser".'
+                    : 'Extract the ZIP file and run the executable for your platform.',
+                '',
+                'CREDITS',
+                '--------',
+                'Developed by: ' + g.developer,
+                'Published on: ' + g.date,
+                'Platform: IndieVault (https://indievault.example.com)',
+                '',
+                '© 2026 ' + g.developer + ' — Published for free on IndieVault.',
+                ''
+            ].join('\n');
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = g.title.replace(/[^a-zA-Z0-9]/g, '_') + '_v1.0.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📦 Downloading ' + g.title + '...');
+        }
+
+        // ===== UTILITIES =====
+        function formatNum(n) {
+            if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+            return n;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ===== INIT =====
+        renderTagFilters();
+        renderGameGrid();
+        renderRecentGrid();
     </script>
-
-
 </body>
 </html>
